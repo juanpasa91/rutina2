@@ -39,7 +39,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .wpill.active{color:#09090F;border-color:transparent}
 
 /* ── CONTENT ── */
-.content{padding:170px 14px 90px}
+.content{padding:170px 14px calc(env(safe-area-inset-bottom, 20px) + 110px)}
 
 /* ── EXERCISE CARD ── */
 .ex-card{background:var(--card);border:1px solid var(--border);border-radius:18px;
@@ -90,13 +90,14 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 /* ── BOTTOM NAV ── */
 .bnav{position:fixed;bottom:0;left:0;right:0;
   background:rgba(9,9,15,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,0);
+  border-top:1px solid var(--border);padding:6px 0 calc(env(safe-area-inset-bottom, 20px) + 12px);
   display:flex;z-index:100}
 .ntab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
   padding:6px 2px;cursor:pointer;border:none;background:none;transition:transform .1s}
 .ntab:active{transform:scale(.92)}
-.n-ico{font-size:22px;line-height:1}
+.n-ico{font-size:20px;line-height:1}
 .n-lbl{font-size:9px;font-weight:700;color:var(--text2);letter-spacing:.4px;text-transform:uppercase}
+.n-day{font-size:8px;color:var(--text3);letter-spacing:.3px;text-transform:uppercase;margin-top:1px}
 
 /* ── GLOSSARY MODAL ── */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);
@@ -182,7 +183,7 @@ const WEEKS = ['S1','S2','S3','S4','S5','S6','Descarga'];
 
 const DAYS = [
   {
-    id:'upper', name:'UPPER', label:'Upper', icon:'💪', color:'#4F8EF7',
+    id:'upper', name:'UPPER', label:'Upper', icon:'💪', color:'#4F8EF7', weekday:'Lunes',
     exercises:[
       {name:'Remo Gironda agarre prono (énfasis espalda alta)', reps:'Top set: 5-6 reps · Back off: 6-8 reps', video:'https://youtube.com/shorts/A3yGkJOnuBc',
        weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
@@ -207,7 +208,7 @@ const DAYS = [
     ]
   },
   {
-    id:'leg1', name:'LEG I', label:'Leg I', icon:'🦵', color:'#F76F4F',
+    id:'leg1', name:'LEG I', label:'Leg I', icon:'🦵', color:'#F76F4F', weekday:'Martes',
     exercises:[
       {name:'Elevaciones de Talones en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/I7TowOwYlt8',
        weeks:['4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','2x?(2)']},
@@ -224,7 +225,7 @@ const DAYS = [
     ]
   },
   {
-    id:'pull', name:'PULL', label:'Pull', icon:'🎯', color:'#2FE89A',
+    id:'pull', name:'PULL', label:'Pull', icon:'🎯', color:'#2FE89A', weekday:'Miércoles',
     exercises:[
       {name:'Dominadas Lastradas', reps:'Top set: 4-5 reps · Back off: 5-9 reps', video:'https://youtube.com/shorts/tQc3FQ-b-u8',
        weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
@@ -245,7 +246,7 @@ const DAYS = [
     ]
   },
   {
-    id:'push', name:'PUSH', label:'Push', icon:'⚡', color:'#F7C84F',
+    id:'push', name:'PUSH', label:'Push', icon:'⚡', color:'#F7C84F', weekday:'Jueves',
     exercises:[
       {name:'Press Inclinado Máquina Smith', reps:'Top set: 6-8 reps · Back off: 8-10 reps', video:'https://youtube.com/shorts/GwbHgaxYhsI',
        weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
@@ -264,7 +265,7 @@ const DAYS = [
     ]
   },
   {
-    id:'leg2', name:'LEG II', label:'Leg II', icon:'🏋️', color:'#C84FF7',
+    id:'leg2', name:'LEG II', label:'Leg II', icon:'🏋️', color:'#C84FF7', weekday:'Viernes',
     exercises:[
       {name:'Elevaciones de Talones en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/I7TowOwYlt8',
        weeks:['4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','2x?(2)']},
@@ -352,7 +353,7 @@ function renderAll(){
 
   document.getElementById('dayTitle').textContent = `${day.icon} ${day.name} DAY`;
   document.getElementById('dayTitle').style.color = col;
-  document.getElementById('daySubtitle').textContent = `${done} / ${day.exercises.length} completados`;
+  document.getElementById('daySubtitle').textContent = `${day.weekday} · ${done} / ${day.exercises.length} completados`;
   document.getElementById('progFill').style.width = pct+'%';
   document.getElementById('progFill').style.background = col;
 
@@ -374,7 +375,7 @@ function renderAll(){
   DAYS.forEach((d,i)=>{
     const b = document.createElement('button');
     b.className='ntab'+(i===curDay?' active':'');
-    b.innerHTML=`<span class="n-ico">${d.icon}</span><span class="n-lbl" style="color:${i===curDay?d.color:'var(--text2)'}">${d.label}</span>`;
+    b.innerHTML=`<span class="n-ico">${d.icon}</span><span class="n-lbl" style="color:${i===curDay?d.color:'var(--text2)'}">${d.label}</span><span class="n-day" style="color:${i===curDay?d.color+'99':'var(--text3)'}">${d.weekday}</span>`;
     b.onclick=()=>{ curDay=i; renderAll(); };
     nav.appendChild(b);
   });
