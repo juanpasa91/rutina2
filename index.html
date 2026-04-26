@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#09090F">
+<title>Rutina II · Julian</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#09090F;--card:#111120;--card2:#181828;--border:rgba(255,255,255,0.07);
+  --text:#EEEEFF;--text2:#7070A0;--text3:#404060;
+  --c0:#4F8EF7;--c1:#F76F4F;--c2:#2FE89A;--c3:#F7C84F;--c4:#C84FF7;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+
+/* ── HEADER ── */
+.header{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:linear-gradient(180deg,#09090F 70%,transparent);
+  padding:env(safe-area-inset-top,44px) 16px 0}
+.header-row{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0 6px}
+.day-title{font-size:24px;font-weight:800;letter-spacing:-0.5px;line-height:1}
+.day-subtitle{font-size:12px;color:var(--text2);margin-top:3px}
+.help-btn{width:34px;height:34px;border-radius:50%;background:var(--card2);
+  border:1px solid var(--border);color:var(--text2);font-size:15px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.prog-bar{height:2px;background:var(--card2);border-radius:1px;margin:4px 0 10px;overflow:hidden}
+.prog-fill{height:100%;border-radius:1px;transition:width .4s ease}
+
+.week-scroll{display:flex;gap:7px;overflow-x:auto;padding-bottom:12px;
+  -ms-overflow-style:none;scrollbar-width:none}
+.week-scroll::-webkit-scrollbar{display:none}
+.wpill{flex-shrink:0;padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);
+  background:var(--card);color:var(--text2);font-size:12px;font-weight:700;
+  cursor:pointer;transition:all .2s;letter-spacing:0.3px;white-space:nowrap}
+.wpill.active{color:#09090F;border-color:transparent}
+
+/* ── CONTENT ── */
+.content{padding:170px 14px 90px}
+
+/* ── EXERCISE CARD ── */
+.ex-card{background:var(--card);border:1px solid var(--border);border-radius:18px;
+  margin-bottom:10px;overflow:hidden;transition:opacity .3s}
+.ex-card.done{opacity:.55}
+
+.ex-head{display:flex;align-items:center;padding:13px 13px;gap:10px;cursor:pointer}
+.ex-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;
+  background:var(--card2);color:var(--text3)}
+.ex-info{flex:1;min-width:0}
+.ex-name{font-size:14px;font-weight:600;line-height:1.35;color:var(--text)}
+.ex-reps{font-size:11px;color:var(--text2);margin-top:3px;letter-spacing:0.2px}
+.ex-btns{display:flex;gap:6px;align-items:center;flex-shrink:0}
+
+.vid-btn{width:34px;height:34px;border-radius:10px;background:rgba(255,50,50,.12);
+  border:none;color:#FF5555;font-size:13px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;text-decoration:none}
+.chk-btn{width:34px;height:34px;border-radius:10px;background:var(--card2);
+  border:1.5px solid var(--border);color:var(--text3);font-size:13px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+
+/* ── EXPANDED BODY ── */
+.ex-body{display:none;padding:0 13px 13px}
+.ex-body.open{display:block}
+.sets-box{background:var(--card2);border-radius:12px;padding:11px 13px;margin-bottom:10px}
+.sets-lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px}
+.sets-txt{font-size:13px;color:var(--text);line-height:1.7}
+.notes-lbl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
+.notes-ta{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-size:13px;padding:10px 12px;resize:none;
+  font-family:inherit;min-height:58px;outline:none}
+.notes-ta::placeholder{color:var(--text3)}
+.notes-ta:focus{border-color:rgba(255,255,255,.15)}
+
+/* ── RIR TAGS ── */
+.rir{display:inline-block;padding:1px 7px;border-radius:5px;font-size:11px;font-weight:700;margin:0 2px}
+.rir0{background:rgba(255,70,70,.18);color:#FF4646}
+.rir1{background:rgba(255,140,40,.18);color:#FF8C28}
+.rir2{background:rgba(255,200,40,.18);color:#FFC828}
+.rir3{background:rgba(70,220,120,.18);color:#46DC78}
+.rirF{background:rgba(255,40,40,.22);color:#FF2828;font-style:italic}
+.tag-ts{display:inline;font-weight:700;color:var(--text)}
+.tag-bo{display:inline;font-weight:700;color:var(--text2)}
+.tag-rp{display:inline-block;padding:1px 7px;border-radius:5px;
+  background:rgba(200,78,247,.18);color:#C84FF7;font-size:11px;font-weight:700;margin:0 2px}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;
+  background:rgba(9,9,15,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,0);
+  display:flex;z-index:100}
+.ntab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 2px;cursor:pointer;border:none;background:none;transition:transform .1s}
+.ntab:active{transform:scale(.92)}
+.n-ico{font-size:22px;line-height:1}
+.n-lbl{font-size:9px;font-weight:700;color:var(--text2);letter-spacing:.4px;text-transform:uppercase}
+
+/* ── GLOSSARY MODAL ── */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);z-index:200;display:flex;align-items:flex-end;
+  opacity:0;pointer-events:none;transition:opacity .3s}
+.modal-ov.open{opacity:1;pointer-events:all}
+.modal-sheet{width:100%;background:var(--card);border-radius:24px 24px 0 0;
+  padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 24px);
+  max-height:82vh;overflow-y:auto;transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.modal-ov.open .modal-sheet{transform:translateY(0)}
+.m-handle{width:38px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.m-title{font-size:20px;font-weight:800;margin-bottom:14px}
+.term-card{background:var(--card2);border-radius:14px;padding:14px;margin-bottom:10px}
+.term-name{font-size:14px;font-weight:700;margin-bottom:6px}
+.term-desc{font-size:13px;color:var(--text2);line-height:1.55}
+.term-desc br{content:'';display:block;margin-top:3px}
+
+/* ── SET ROWS ── */
+.set-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:4px}
+.set-row{display:flex;align-items:center;gap:8px;background:var(--card2);border-radius:10px;padding:9px 11px}
+.set-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;width:66px;flex-shrink:0;color:var(--text2)}
+.set-lbl.ts{color:var(--text)}
+.set-mid{flex:1;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.weight-in{background:rgba(255,255,255,.06);border:1.5px solid var(--border);border-radius:8px;
+  color:var(--text);font-size:14px;font-weight:700;width:80px;text-align:center;
+  padding:5px 6px;outline:none;font-family:inherit;-moz-appearance:textfield}
+.weight-in::-webkit-outer-spin-button,.weight-in::-webkit-inner-spin-button{-webkit-appearance:none}
+.weight-in::placeholder{color:var(--text3);font-size:11px;font-weight:400}
+.weight-in:focus{border-color:rgba(255,255,255,.25)}
+.w-unit{font-size:10px;color:var(--text2)}
+
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-row">
+    <div>
+      <div class="day-title" id="dayTitle">💪 UPPER DAY</div>
+      <div class="day-subtitle" id="daySubtitle">0 / 10 completados</div>
+    </div>
+    <button class="help-btn" onclick="openGlossary()">?</button>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="week-scroll" id="weekScroll"></div>
+</header>
+
+<main class="content" id="content"></main>
+
+<nav class="bnav" id="bnav"></nav>
+
+<!-- Glossary -->
+<div class="modal-ov" id="glossModal" onclick="closeGlossary(event)">
+  <div class="modal-sheet">
+    <div class="m-handle"></div>
+    <div class="m-title">📖 Glosario</div>
+    <div class="term-card">
+      <div class="term-name">🎯 Top Set</div>
+      <div class="term-desc">La serie más importante — por lo general la más pesada. Buscas el mejor desempeño posible sacando la cantidad de reps indicada.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-name">⬇️ Back Off / Resto</div>
+      <div class="term-desc">Series secundarias después del Top Set. Bajas el peso para poder sacar más repeticiones a mayor intensidad.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-name" style="display:flex;gap:8px;align-items:center">📊 RIR <span class="rir rir0">RIR 0</span><span class="rir rir1">RIR 1</span><span class="rir rir2">RIR 2</span><span class="rir rir3">RIR 3</span></div>
+      <div class="term-desc">Reps In Reserve = repeticiones que dejas en reserva antes del fallo.<br>• <b>RIR 3</b> — Fácil, 3 reps más en el tanque<br>• <b>RIR 2</b> — Moderado<br>• <b>RIR 1</b> — Difícil, 1 rep más posible<br>• <b>RIR 0</b> — Al límite, no sale 1 más<br>• <b style="color:#FF2828">Fallo</b> — No pudiste completar la última rep</div>
+    </div>
+    <div class="term-card">
+      <div class="term-name"><span class="tag-rp">Rest Pause</span></div>
+      <div class="term-desc">Técnica de alta intensidad. Al terminar tu última serie, descansas 30 seg y realizas una serie extra con el mismo peso llegando al fallo — sin importar cuántas reps salgan.</div>
+    </div>
+    <div class="term-card">
+      <div class="term-name">🔢 Notación: 3x?(RIR)</div>
+      <div class="term-desc">3 series · peso a determinar · RIR indicado.<br>El <b>?</b> es el peso que tú pones — anótalo en "Mis pesos" para llevar tu progresión semana a semana.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const WEEKS = ['S1','S2','S3','S4','S5','S6','Descarga'];
+
+const DAYS = [
+  {
+    id:'upper', name:'UPPER', label:'Upper', icon:'💪', color:'#4F8EF7',
+    exercises:[
+      {name:'Remo Gironda agarre prono (énfasis espalda alta)', reps:'Top set: 5-6 reps · Back off: 6-8 reps', video:'https://youtube.com/shorts/A3yGkJOnuBc',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Press Banca Plano con Barra', reps:'Top set: 5-6 reps · Back off: 6-8 reps', video:'https://youtube.com/shorts/yDaqEu8hEvU',
+       weeks:['top set: 1x?(2) / back off: 2x?(2)','top set: 1x?(2) / back off: 2x?(1)','top set: 1x?(2) / back off: 2x?(1)','top set: 1x?(2) / back off: 2x?(1)','top set: 1x?(2) / back off: 2x?(1)','top set: 1x?(2) / back off: 2x?(1)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Jalón Unilateral en Polea Alta (banco inclinado 60°)', reps:'8-10 reps', video:'https://youtube.com/shorts/qljxEkiqmWI',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+      {name:'Pec Deck o Cruces en Polea', reps:'10-12 reps', video:'https://youtube.com/shorts/_6GZNBOlvZw',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+      {name:'Elevaciones Laterales con Mancuernas (banco inclinado 60°)', reps:'>12 reps', video:'https://youtube.com/shorts/_6GZNBOlvZw',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+      {name:'Curl Sentado en Banco Predicador al Revés', reps:'Top set: 8-10 reps · Back off: 10-12 reps', video:'https://youtube.com/shorts/CUeQOHtygPA',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Curl Bayesian en Polea', reps:'10-12 reps', video:'https://youtube.com/shorts/AiYV8uwl_Qg',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+      {name:'Press Francés con Mancuernas', reps:'Top set: 8-10 reps · Back off: 10-12 reps', video:'https://youtube.com/shorts/hxQDAEziAp8',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Extensión de Tríceps Katana en Polea Baja con Muñequera', reps:'8-10 reps', video:'https://youtube.com/shorts/Mr7yOAg75aU',
+       weeks:['4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','2x?(2)']},
+      {name:'Cable Crunch (Abdominales)', reps:'Al fallo', video:'https://youtube.com/shorts/xHDvAWDUXBQ',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+    ]
+  },
+  {
+    id:'leg1', name:'LEG I', label:'Leg I', icon:'🦵', color:'#F76F4F',
+    exercises:[
+      {name:'Elevaciones de Talones en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/I7TowOwYlt8',
+       weeks:['4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','2x?(2)']},
+      {name:'Aducción de Cadera en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/MtW5VT9Ys5o',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+      {name:'Sentadilla Libre o Máquina Smith', reps:'Top set: 7-11 reps · Back off: 11-13 reps', video:'https://youtube.com/shorts/WTsGrUegGME',
+       weeks:['top set: 1x?(2) / back off: 1x?(2)','top set: 1x?(2) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(0)','top set: 1x?(1) / back off: 1x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Extensión de Rodilla en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/3_IZFB_oi9E',
+       weeks:['3x?(1)','1x?(1) / 2x?(0)','2x?(0)','1x?(0) / 1x?(fallo)','2x?(fallo)','2x?(fallo)','2x?(1)']},
+      {name:'Curl Femoral en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/QyO6fVnVGUw',
+       weeks:['2x?(1)','1x?(1) / 1x?(0)','2x?(0)','1x?(0) / 1x?(fallo)','2x?(fallo)','2x?(fallo)','2x?(1)']},
+      {name:'Sentadilla Búlgara (pierna adelantada, énfasis glúteo)', reps:'Top set: 6-8 reps · Back off: 8-10 reps', video:'https://youtube.com/shorts/fDny63C-xG8',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+    ]
+  },
+  {
+    id:'pull', name:'PULL', label:'Pull', icon:'🎯', color:'#2FE89A',
+    exercises:[
+      {name:'Dominadas Lastradas', reps:'Top set: 4-5 reps · Back off: 5-9 reps', video:'https://youtube.com/shorts/tQc3FQ-b-u8',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Remo Horizontal Unilateral en Polea Baja', reps:'Top set: 8-10 reps · Back off: 10-15 reps', video:'https://youtube.com/shorts/n9fBlnJb8EQ',
+       weeks:['top set: 1x?(1) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(0)','top set: 1x?(1) / back off: 1x?(0)','top set: 1x?(0) / back off: 1x?(0)','top set: 1x?(0) / back off: 1x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Pullover Unilateral en Polea (altura ojos, pegado a la polea)', reps:'10-15 reps', video:'https://youtube.com/shorts/Lzih--lGj84',
+       weeks:['2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(2)']},
+      {name:'Reverse Flye Unilateral (deltoides posterior)', reps:'12-15 reps', video:'https://www.youtube.com/shorts/T605v1BN5-k',
+       weeks:['2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(2)']},
+      {name:'Curl Martillo a Una Mano con Mancuerna', reps:'Top set: 8-10 reps · Back off: 10-12 reps', video:'https://youtube.com/shorts/vlcMiC4tiJA',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Curl Unilateral en Banco Scott con Mancuerna', reps:'10-12 reps', video:'https://youtube.com/shorts/PIR-NDV_YGI',
+       weeks:['2x?(1)','1x?(1) / 1x?(0)','2x?(0)','1x?(0) / 1x?(fallo)','2x?(fallo) + rest pause en última serie','2x?(fallo) + rest pause en última serie','2x?(2)']},
+      {name:'Curl Bayesian en Polea (altura cadera)', reps:'10-12 reps', video:'https://youtube.com/shorts/AiYV8uwl_Qg',
+       weeks:['2x?(fallo)','2x?(fallo)','2x?(fallo)','2x?(fallo)','2x?(fallo)','2x?(fallo)','2x?(2)']},
+      {name:'Reverse Crunch en Banco', reps:'Al fallo', video:'https://youtube.com/shorts/wY0WWB_Ex0Q',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+    ]
+  },
+  {
+    id:'push', name:'PUSH', label:'Push', icon:'⚡', color:'#F7C84F',
+    exercises:[
+      {name:'Press Inclinado Máquina Smith', reps:'Top set: 6-8 reps · Back off: 8-10 reps', video:'https://youtube.com/shorts/GwbHgaxYhsI',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(0) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Press Plano Máquina Smith (pausa 1 seg en estiramiento)', reps:'Top set: 6-8 reps · Back off: 8-10 reps', video:'https://youtube.com/shorts/d0f1Hird7bU',
+       weeks:['top set: 1x?(1) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(0)','top set: 1x?(1) / back off: 1x?(0)','top set: 1x?(0) / back off: 1x?(0)','top set: 1x?(0) / back off: 1x?(0)','2x?(2)']},
+      {name:'Cruces en Polea (pecho)', reps:'10-12 reps', video:'https://youtube.com/shorts/xuPLTh4j8Fo',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+      {name:'Press Militar en Máquina (banco inclinado 75°)', reps:'Top set: 8-10 reps · Back off: 10-12 reps', video:'https://youtube.com/shorts/p2bu7Abe3DQ',
+       weeks:['top set: 1x?(1) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(1)','top set: 1x?(1) / back off: 1x?(0)','top set: 1x?(1) / back off: 1x?(0)','top set: 1x?(0) / back off: 1x?(0)','top set: 1x?(0) / back off: 1x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Elevaciones Laterales en Polea con Muñequera (cruzadas, altura cadera)', reps:'12-15 reps', video:'https://youtube.com/shorts/U63eW5xHzI4',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(2)']},
+      {name:'Extensión de Tríceps Sentado en Máquina (codos adelante)', reps:'Top set: 8-10 reps · Back off: 10-12 reps', video:'https://youtube.com/shorts/3OaqF6uj494',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Extensión Unilateral de Tríceps de Espaldas a la Polea', reps:'8-10 reps', video:'https://youtube.com/shorts/zZDgfrA2dCs',
+       weeks:['3x?(1) + rest pause en última serie','2x?(1) / 1x?(0) + rest pause en última serie','1x?(1) / 2x?(0) + rest pause en última serie','3x?(0) + rest pause en última serie','3x?(0) + rest pause en última serie','3x?(0) + rest pause en última serie','2x?(2)']},
+    ]
+  },
+  {
+    id:'leg2', name:'LEG II', label:'Leg II', icon:'🏋️', color:'#C84FF7',
+    exercises:[
+      {name:'Elevaciones de Talones en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/I7TowOwYlt8',
+       weeks:['4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','4x?(fallo)','2x?(2)']},
+      {name:'Aducción de Cadera en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/MtW5VT9Ys5o',
+       weeks:['3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','3x?(fallo)','2x?(1)']},
+      {name:'Prensa a 45°', reps:'Top set: 8-10 reps · Back off: 10-14 reps', video:'https://youtube.com/shorts/WFHo6eGIkuQ',
+       weeks:['top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 2x?(1)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 1x?(1) / 1x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(1) / back off: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+      {name:'Extensión de Rodilla en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/3_IZFB_oi9E',
+       weeks:['3x?(1)','1x?(1) / 2x?(0)','2x?(0)','1x?(0) / 1x?(fallo)','2x?(fallo)','2x?(fallo)','2x?(1)']},
+      {name:'Curl Femoral en Máquina', reps:'12-15 reps', video:'https://youtube.com/shorts/QyO6fVnVGUw',
+       weeks:['3x?(1)','1x?(1) / 2x?(0)','2x?(0)','1x?(0) / 1x?(fallo)','2x?(fallo)','2x?(fallo)','2x?(1)']},
+      {name:'RDL con Mancuernas', reps:'Top set: 8-10 reps · Resto: 10-12 reps', video:'https://youtube.com/shorts/elX-QpiU4MQ',
+       weeks:['top set: 1x?(1) / resto: 2x?(1)','top set: 1x?(1) / resto: 2x?(1)','top set: 1x?(1) / resto: 1x?(1) / 1x?(0)','top set: 1x?(1) / resto: 1x?(1) / 1x?(0)','top set: 1x?(1) / resto: 2x?(0)','top set: 1x?(1) / resto: 2x?(0)','top set: 1x?(3) / resto: 1x?(2)']},
+    ]
+  },
+];
+
+// ── SET PARSER ──
+function parseSets(str){
+  const rows=[];
+  const hasRP=/rest pause/i.test(str);
+  const clean=str.replace(/\+?\s*rest pause[^/]*/gi,'').trim();
+  const parts=clean.split(/\s*\/\s*/);
+  let lastLbl='Serie';
+  parts.forEach((part,pi)=>{
+    part=part.trim(); if(!part)return;
+    let lbl=null;
+    if(/top set:/i.test(part)) lbl='Top Set';
+    else if(/back off:/i.test(part)) lbl='Back Off';
+    else if(/resto:/i.test(part)) lbl='Resto';
+    if(lbl) lastLbl=lbl; else lbl=lastLbl;
+    const body=part.replace(/top set:|back off:|resto:/gi,'').trim();
+    const m=body.match(/(\d+)x\?\(([^)]+)\)/);
+    if(m){
+      const cnt=parseInt(m[1]),rir=m[2];
+      for(let j=0;j<cnt;j++){
+        const isLast=pi===parts.length-1&&j===cnt-1;
+        rows.push({lbl,rir,rp:hasRP&&isLast});
+      }
+    }
+  });
+  return rows;
+}
+function fmtRir(rir){
+  if(rir==='fallo') return '<span class="rir rirF">FALLO</span>';
+  return `<span class="rir rir${rir}">RIR ${rir}</span>`;
+}
+function renderSetRows(weekStr,savedSets,exIdx){
+  const rows=parseSets(weekStr);
+  return rows.map((r,i)=>`
+    <div class="set-row">
+      <span class="set-lbl${r.lbl==='Top Set'?' ts':''}">${r.lbl}</span>
+      <span class="set-mid">${fmtRir(r.rir)}${r.rp?' <span class="tag-rp">RP</span>':''}</span>
+      <input class="weight-in" type="number" inputmode="decimal" placeholder="kg"
+        value="${(savedSets&&savedSets[i])||''}"
+        oninput="saveWeight(${exIdx},${i},this.value)">
+      <span class="w-unit">kg</span>
+    </div>`).join('');
+}
+
+// ── STATE ──
+let curDay = 0, curWeek = 0;
+let prog = JSON.parse(localStorage.getItem('rutina2_v2') || '{}');
+
+function key(d,w,e){ return `${d}_w${w}_e${e}`; }
+function save(){ localStorage.setItem('rutina2_v2', JSON.stringify(prog)); }
+
+// ── FORMAT ──
+function fmt(s){
+  return s
+    .replace(/\?\(fallo\)/g,'<span class="rir rirF">FALLO</span>')
+    .replace(/\?\((\d)\)/g,(_,n)=>`<span class="rir rir${n}">RIR ${n}</span>`)
+    .replace(/top set:/gi,'<span class="tag-ts">Top Set:</span>')
+    .replace(/back off:/gi,'<span class="tag-bo">Back Off:</span>')
+    .replace(/resto:/gi,'<span class="tag-bo">Resto:</span>')
+    .replace(/rest pause/gi,'<span class="tag-rp">Rest Pause</span>');
+}
+
+// ── RENDER ──
+function renderAll(){
+  const day = DAYS[curDay];
+  const col = day.color;
+  const done = day.exercises.filter((_,i)=>prog[key(day.id,curWeek,i)]?.done).length;
+  const pct = Math.round(done/day.exercises.length*100);
+
+  document.getElementById('dayTitle').textContent = `${day.icon} ${day.name} DAY`;
+  document.getElementById('dayTitle').style.color = col;
+  document.getElementById('daySubtitle').textContent = `${done} / ${day.exercises.length} completados`;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progFill').style.background = col;
+
+  // weeks
+  const ws = document.getElementById('weekScroll');
+  ws.innerHTML = '';
+  WEEKS.forEach((w,i)=>{
+    const p = document.createElement('button');
+    p.className = 'wpill'+(i===curWeek?' active':'');
+    p.textContent = i===6?'🔽 Descarga':w;
+    if(i===curWeek){ p.style.background=col; }
+    p.onclick=()=>{ curWeek=i; renderAll(); };
+    ws.appendChild(p);
+  });
+
+  // nav
+  const nav = document.getElementById('bnav');
+  nav.innerHTML = '';
+  DAYS.forEach((d,i)=>{
+    const b = document.createElement('button');
+    b.className='ntab'+(i===curDay?' active':'');
+    b.innerHTML=`<span class="n-ico">${d.icon}</span><span class="n-lbl" style="color:${i===curDay?d.color:'var(--text2)'}">${d.label}</span>`;
+    b.onclick=()=>{ curDay=i; renderAll(); };
+    nav.appendChild(b);
+  });
+
+  // exercises
+  const ct = document.getElementById('content');
+  // remember which cards were open
+  const openSet = new Set();
+  ct.querySelectorAll('.ex-body.open').forEach(el=>openSet.add(el.id));
+  ct.innerHTML = '';
+
+  day.exercises.forEach((ex,i)=>{
+    const k = key(day.id,curWeek,i);
+    const p = prog[k]||{};
+    const isDone = p.done||false;
+    const bodyId = `body-${i}`;
+    const wasOpen = openSet.has(bodyId);
+
+    const card = document.createElement('div');
+    card.className='ex-card'+(isDone?' done':'');
+
+    card.innerHTML = `
+      <div class="ex-head" onclick="toggleCard(${i})">
+        <div class="ex-num" style="${isDone?`background:${col}22;color:${col}`:''}">
+          ${isDone?'✓':i+1}
+        </div>
+        <div class="ex-info">
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-reps">${ex.reps}</div>
+        </div>
+        <div class="ex-btns" onclick="event.stopPropagation()">
+          <a class="vid-btn" href="${ex.video}" target="_blank">▶</a>
+          <button class="chk-btn" id="chk-${i}"
+            style="${isDone?`background:${col}18;border-color:${col};color:${col}`:''}"
+            onclick="toggleDone(${i})">
+            ${isDone?'✓':'○'}
+          </button>
+        </div>
+      </div>
+      <div class="ex-body${wasOpen?' open':''}" id="${bodyId}">
+        <div class="sets-lbl" style="margin-bottom:8px">📋 ${WEEKS[curWeek]}</div>
+        <div class="set-rows">${renderSetRows(ex.weeks[curWeek],p.sets||[],i)}</div>
+      </div>`;
+
+    ct.appendChild(card);
+  });
+}
+
+function toggleCard(i){
+  const b = document.getElementById(`body-${i}`);
+  b.classList.toggle('open');
+}
+
+function toggleDone(i){
+  const day = DAYS[curDay];
+  const k = key(day.id,curWeek,i);
+  if(!prog[k]) prog[k]={};
+  prog[k].done = !prog[k].done;
+  save(); renderAll();
+}
+
+function saveWeight(exIdx,setIdx,val){
+  const day=DAYS[curDay];
+  const k=key(day.id,curWeek,exIdx);
+  if(!prog[k]) prog[k]={};
+  if(!prog[k].sets) prog[k].sets=[];
+  prog[k].sets[setIdx]=val;
+  save();
+}
+
+function openGlossary(){ document.getElementById('glossModal').classList.add('open'); }
+function closeGlossary(e){ if(e.target===document.getElementById('glossModal')) document.getElementById('glossModal').classList.remove('open'); }
+
+renderAll();
+</script>
+</body>
+</html>
